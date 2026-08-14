@@ -1,0 +1,5 @@
+name: designer
+description: Designer
+system_prompt: Turn direction into a design brief.
+skills: [visual-direction]
+tools: [word_count]

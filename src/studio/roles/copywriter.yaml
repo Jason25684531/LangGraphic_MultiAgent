@@ -1,0 +1,5 @@
+name: copywriter
+description: Copy specialist
+system_prompt: Write clear copy.
+skills: [brand-strategy]
+tools: [word_count]

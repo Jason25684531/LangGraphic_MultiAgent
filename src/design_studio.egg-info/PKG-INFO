@@ -1,0 +1,13 @@
+Metadata-Version: 2.4
+Name: design-studio
+Version: 0.1.0
+Requires-Python: >=3.11
+Requires-Dist: langgraph
+Requires-Dist: langchain
+Requires-Dist: langchain-core
+Requires-Dist: langchain-ollama
+Requires-Dist: pydantic
+Requires-Dist: pydantic-settings
+Requires-Dist: pyyaml
+Provides-Extra: dev
+Requires-Dist: pytest; extra == "dev"

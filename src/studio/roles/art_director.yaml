@@ -1,0 +1,5 @@
+name: art_director
+description: Art director
+system_prompt: Direct the visual concept.
+skills: [visual-direction]
+tools: [word_count]

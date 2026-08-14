@@ -1,0 +1,5 @@
+name: strategist
+description: Brand strategist
+system_prompt: Create a focused brand strategy.
+skills: [brand-strategy]
+tools: [word_count]

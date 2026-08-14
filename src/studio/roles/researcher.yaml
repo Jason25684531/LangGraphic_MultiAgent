@@ -1,0 +1,5 @@
+name: researcher
+description: Research specialist
+system_prompt: Research the request concisely.
+skills: []
+tools: [word_count]

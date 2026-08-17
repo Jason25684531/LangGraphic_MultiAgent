@@ -42,3 +42,11 @@ def test_supervisor_discovers_dynamic_roles_without_graph_role_names(tmp_path):
     assert "motion_designer: Develop motion direction" in supervisor.prompt
     graph_source = Path("src/studio/graph.py").read_text(encoding="utf-8")
     assert "strategist" not in graph_source and "art_director" not in graph_source
+
+
+def test_supervisor_includes_dynamic_ux_designer_description(tmp_path):
+    (tmp_path / "ux_designer.yaml").write_text(
+        "name: ux_designer\ndescription: Design user flows and information architecture.\nsystem_prompt: Coordinate UX work.\n"
+    )
+    supervisor = Supervisor(RoleRegistry(tmp_path), FakeChatModel(), TOOL_REGISTRY, load_skill)
+    assert "ux_designer: Design user flows and information architecture." in supervisor.prompt

@@ -6,6 +6,7 @@ def test_skill_loading_is_safe():
     assert "audience" in load_skill("brand-strategy")
     with pytest.raises((ValueError, SkillNotFoundError)): load_skill("../secret")
     with pytest.raises(SkillNotFoundError): load_skill("missing")
+    with pytest.raises(ValueError): load_skill("/absolute")
 
 
 def test_skill_metadata_is_safe_and_tolerates_legacy_skills(tmp_path):

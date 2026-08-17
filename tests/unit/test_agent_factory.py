@@ -12,6 +12,11 @@ def test_role_agent_is_injected_and_scoped():
     agent = create_role_agent(role, model, TOOL_REGISTRY)
     assert agent.invoke("task") == "draft"
     assert "brand-strategy" in agent.prompt
+    assert role.system_prompt in agent.prompt
+    for skill in role.skills:
+        metadata = __import__("studio.skills.loader", fromlist=["load_skill_metadata"]).load_skill_metadata(skill)
+        assert metadata.name in agent.prompt and metadata.description in agent.prompt
+        assert "## Process" not in agent.prompt
     assert {tool.name for tool in agent.tools} == {"word_count", "load_skill"}
 
 
@@ -35,3 +40,11 @@ def test_role_agent_stops_at_tool_call_limit():
     call = {"name": "word_count", "args": {"text": "one"}, "id": "1"}
     agent = create_role_agent(role, FakeChatModel([AIMessage(content="", tool_calls=[call])] * 8), TOOL_REGISTRY)
     assert "tool-call limit" in agent.invoke("task")
+
+
+def test_load_skill_rejects_undeclared_skill():
+    role = RoleRegistry("src/studio/roles").get("strategist")
+    agent = create_role_agent(role, FakeChatModel(), TOOL_REGISTRY)
+    tool = next(tool for tool in agent.tools if tool.name == "load_skill")
+    with pytest.raises(ValueError):
+        tool.invoke({"name": "copywriting"})

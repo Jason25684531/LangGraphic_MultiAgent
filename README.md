@@ -161,6 +161,30 @@ src/studio/roles/
 
 ---
 
+# Role and Skill Packs
+
+Each role has a focused persona and can only load its declared skills. Skill metadata is injected into the role prompt; its full procedure remains lazy-loaded through `load_skill`.
+
+| Role | Skills |
+| --- | --- |
+| strategist | brand-strategy, audience-definition |
+| researcher | research-planning, competitive-analysis, reference-analysis |
+| copywriter | copywriting, messaging, tone-of-voice |
+| art_director | visual-direction, typography, image-prompting |
+| designer | visual-direction, typography, layout-design |
+| motion_designer | visual-direction, motion-direction, animation-timing |
+
+Manual routing prompts:
+
+```text
+Define a positioning for a sustainable commuter brand.
+Plan the research needed before choosing a new category position.
+Write three distinct launch headlines for an audience that values repairability.
+Set art direction for a calm, technical productivity campaign.
+Develop motion direction for a logo reveal that signals precision.
+Create a launch concept spanning strategy, copy, art direction, and motion.
+```
+
 # Project Structure
 
 ```text

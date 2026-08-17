@@ -68,3 +68,5 @@ skills-lock.json
 
 artifacts/*
 CONTEXT-UI.md
+
+src/studio/skills/*

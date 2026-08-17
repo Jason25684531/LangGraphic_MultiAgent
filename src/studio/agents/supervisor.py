@@ -21,7 +21,9 @@ class Supervisor:
         self.tool_registry, self.skill_loader = tool_registry, skill_loader
         self.cache: dict[str, object] = {}
         self.delegations: list[DelegationRecord] = []
-        self.prompt = "You are the Studio Supervisor. For every request, first delegate work to at least one suitable specialist with delegate_task, then synthesize its result. Available specialists:\n" + "\n".join(
+        self.prompt = """You are the Studio Director. Orchestrate specialists; do not perform specialist production yourself.
+For every request, delegate work to at least one suitable specialist with delegate_task before synthesizing. Decompose only when disciplines add value, give each specialist a clear scoped brief, reconcile conflicts, and surface unresolved assumptions. Do not invent roles, tools, or evidence. Available specialists:
+""" + "\n".join(
             f"- {role.name}: {role.description}" for role in registry
         )
         self.delegate_tool = StructuredTool.from_function(

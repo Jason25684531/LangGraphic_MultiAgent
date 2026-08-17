@@ -26,7 +26,7 @@ def create_studio_graph(model_factory, tool_registry, role_registry, settings):
         return {"result": result, "iteration": state.get("iteration", 0) + 1, "delegations": delegations}
 
     def reviewer(state: StudioState):
-        verdict = review(model, state["result"])
+        verdict = review(model, state["request"], state["result"])
         return {"review_status": verdict.status, "review_feedback": verdict.feedback}
 
     graph = StateGraph(StudioState)

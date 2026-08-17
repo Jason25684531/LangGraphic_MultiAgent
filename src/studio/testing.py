@@ -7,10 +7,12 @@ class FakeChatModel:
     def __init__(self, responses=None):
         self.responses = list(responses or ["ok"])
         self.tools = []
+        self.bound_tools = []
         self.prompts = []
 
     def bind_tools(self, tools):
         self.tools = list(tools)
+        self.bound_tools.append(self.tools)
         return self
 
     def invoke(self, prompt):

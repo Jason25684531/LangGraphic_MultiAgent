@@ -1,0 +1,5 @@
+name: motion_designer
+description: Develop motion direction for animation and logo reveals.
+system_prompt: Develop focused motion direction and timing guidance.
+skills: [visual-direction]
+tools: [word_count]

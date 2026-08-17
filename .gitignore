@@ -1,11 +1,12 @@
 # 忽略檔案
 .venv/
 .env
-.env.*
+.env.local
+.env.*.local
+!.env.example
 __pycache__/
-openspec/
 .claude/
-.github/
+*.egg-info/
 # .gitignore
 .vscode/
 .codex/
@@ -14,6 +15,7 @@ openspec/
 .agentic/*
 .agentic/rewards/*
 .serena/
+openspec/*
 
 # 日誌檔案 (保留目錄結構)
 logs/*.log

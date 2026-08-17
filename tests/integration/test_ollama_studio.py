@@ -12,4 +12,11 @@ def test_studio_e2e(ollama_settings):
     graph = create_studio_graph(create_chat_model, TOOL_REGISTRY, RoleRegistry("src/studio/roles"), StudioSettings())
     state = graph.invoke({"request":"Create a brand brief.", "result":"", "review_status":"", "review_feedback":"", "iteration":0, "delegations":[]})
     assert state["result"] and state["delegations"]
-    assert {entry["role"] for entry in state["delegations"]} == {"strategist"}
+    assert {entry["role"] for entry in state["delegations"]} <= set(RoleRegistry("src/studio/roles").roles)
+
+
+@pytest.mark.ollama_slow
+def test_studio_multi_role_e2e(ollama_settings):
+    graph = create_studio_graph(create_chat_model, TOOL_REGISTRY, RoleRegistry("src/studio/roles"), StudioSettings())
+    state = graph.invoke({"request":"Develop a brand and visual direction.", "result":"", "review_status":"", "review_feedback":"", "iteration":0, "delegations":[]})
+    assert state["result"] and state["delegations"]

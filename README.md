@@ -1,29 +1,36 @@
 # Design Studio
 
-本地優先的多代理設計工作流，使用 Ollama 與 LangGraph。
+以 LangGraph 與本機 Ollama 建立可動態編排的設計工作室。預設模型為 `gemma4:e2b`。
 
-## 安裝與設定
+## 快速開始
 
 ```powershell
 py -3 -m venv .venv
 .\.venv\Scripts\python -m pip install -e ".[dev]"
 Copy-Item .env.example .env
+.\.venv\Scripts\python -m studio.demo "Develop motion direction for a logo reveal."
 ```
 
-請啟動 Ollama，並將 `.env` 的 `OLLAMA_MODEL` 改為已安裝、支援 tool calling 與 structured output 的模型（本機已驗證 `qwen3.5:9b`）。
+## 架構
+
+`Role YAML → RoleRegistry → Supervisor → delegate_task → Specialist → Supervisor synthesis → Reviewer → LangGraph END`
+
+- Role：`src/studio/roles/*.yaml` 定義名稱、描述、skills 與 tools。
+- Skill：`SKILL.md` 前置資料只進 prompt；內容僅由 `load_skill` 按需載入。
+- Tool：以 `@tool` 登錄於 `TOOL_REGISTRY`；Specialist 只能使用自己角色宣告的 tools。
+- Supervisor：由 RoleRegistry 動態產生可用角色清單，並只綁定 `delegate_task`。
+- Reviewer：輸出 `pass` 或 `revise`；revision 會把先前結果與 feedback 回送 Supervisor。
+- LangGraph：負責 `STUDIO → REVIEW → END`，不含角色名稱或 routing sentinel。
+- Ollama：模型名稱只由 `.env` 或設定提供。
+
+新增 `motion_designer.yaml` 後，Supervisor 可選用該角色，不需要修改 `graph.py`；此行為由離線 graph 測試保護。
+
+## 驗證
 
 ```powershell
-.\.venv\Scripts\python -m studio.demo "建立咖啡品牌設計簡報"
-.\.venv\Scripts\python -m studio.doctor
 .\.venv\Scripts\python -m pytest tests/unit tests/graph
-.\.venv\Scripts\python -m pytest -m ollama
+.\.venv\Scripts\python -m pytest -m "ollama and not ollama_slow"
+.\.venv\Scripts\python -m pytest -m ollama_slow
 .\.venv\Scripts\python -m pytest
+.\.venv\Scripts\python -m studio.doctor
 ```
-
-## 擴充
-
-- Role：在 `src/studio/roles/` 新增 YAML，填入 `name`、`description`、`system_prompt`、`skills`、`tools`。
-- Skill：新增 `src/studio/skills/<name>/SKILL.md`，再於角色 YAML 宣告名稱。
-- Tool：以 `@tool` 定義安全函式，加入 `src/studio/tools/registry.py` 的 `TOOL_REGISTRY`，再於角色 YAML 白名單中宣告。
-
-新增角色不需要修改 graph；下一次建立 `RoleRegistry` 即會自動載入。

@@ -17,15 +17,13 @@ def create_studio_graph(model_factory, tool_registry, role_registry, settings):
     supervisor = Supervisor(role_registry, model, tool_registry, load_skill)
 
     def studio(state: StudioState):
-        roles = ["strategist"] if "strategist" in role_registry.roles else [next(iter(role_registry)).name]
-        if "multi" in state["request"].lower():
-            roles = [role for role in ("strategist", "art_director") if role in role_registry.roles]
         task = state["request"]
+        if state.get("result"):
+            task += f"\nPrevious result: {state['result']}"
         if state.get("review_feedback"):
             task += f"\nPrevious review feedback: {state['review_feedback']}"
-        results = [supervisor.delegate_task(role, task) for role in roles]
-        return {"result": "\n".join(results), "iteration": state.get("iteration", 0) + 1,
-                "delegations": supervisor.delegations.copy()}
+        result, delegations = supervisor.invoke(task, settings.max_agent_turns)
+        return {"result": result, "iteration": state.get("iteration", 0) + 1, "delegations": delegations}
 
     def reviewer(state: StudioState):
         verdict = review(model, state["result"])
